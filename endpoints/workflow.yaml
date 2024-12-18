@@ -1,0 +1,5 @@
+path: "/workflow"
+method: "POST"
+extra:
+  python:
+    source: "endpoints/workflow.py"

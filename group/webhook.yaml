@@ -1,0 +1,38 @@
+settings:
+  - name: api_key
+    type: secret-input
+    required: true
+    label:
+      en_US: API key
+      zh_Hans: API key
+      pt_BR: API key
+    placeholder:
+      en_US: Please input your API key
+      zh_Hans: 请输入你的 API key
+      pt_BR: Please input your API key
+  - name: api_key_location
+    type: select
+    required: true
+    label:
+      en_US: API key location
+      zh_Hans: API key location
+      pt_BR: API key location
+    options: 
+      - value: api_key_header
+        label:
+          en_US: X-API-Key Header
+          zh_Hans: X-API-Key Header
+          pt_BR: X-API-Key Header
+      - value: token_query_param
+        label:
+          en_US: URL Query Param 'difyToken'
+          zh_Hans: URL Query Param 'difyToken'
+          pt_BR: URL Query Param 'difyToken'
+    default: api_key_header
+    placeholder:
+      en_US: Please select the API key location
+      zh_Hans: 请选择 API key 位置
+      pt_BR: Por favor, selecione a localização da chave de API
+endpoints:
+  - endpoints/workflow.yaml
+  - endpoints/chatflow.yaml
