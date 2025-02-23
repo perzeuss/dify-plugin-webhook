@@ -7,7 +7,6 @@ from endpoints.helpers import apply_middleware, validate_api_key
 
 logger = logging.getLogger(__name__)
 
-
 class WorkflowEndpoint(Endpoint):
     """
     The WorkflowEndpoint is used to trigger a Dify workflow via an HTTP request.
@@ -62,7 +61,9 @@ class WorkflowEndpoint(Endpoint):
                 return Response(json.dumps({"error": "app_id is required"}),
                                 status=400, content_type="application/json")
 
-            if settings["explicit_inputs"]:
+            explicit_inputs = settings.get('explicit_inputs', True)
+
+            if explicit_inputs:
                 inputs = request_data.get("inputs", {})
                 if not isinstance(inputs, dict):
                     logger.error(
@@ -83,7 +84,8 @@ class WorkflowEndpoint(Endpoint):
                 app_id=app_id, inputs=inputs, response_mode="blocking"
             )
 
-            response = dify_response["data"]["outputs"] if settings["raw_data_only"] else dify_response
+            response = dify_response["data"]["outputs"] if settings.get(
+                'raw_data_output', False) else dify_response
 
             logger.debug("Workflow response: %s", response)
             return Response(json.dumps(response), status=200, content_type="application/json")

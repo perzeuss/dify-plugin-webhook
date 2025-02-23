@@ -52,7 +52,9 @@ class ChatflowEndpoint(Endpoint):
                 return Response(json.dumps({"error": "app_id is required"}),
                                 status=400, content_type="application/json")
 
-            if settings["explicit_inputs"]:
+            explicit_inputs = settings.get('explicit_inputs', True)
+
+            if explicit_inputs:
                 inputs = request_data.get("inputs", {})
                 if not isinstance(inputs, dict):
                     return Response(json.dumps({"error": "inputs must be an object"}),
@@ -63,12 +65,12 @@ class ChatflowEndpoint(Endpoint):
                     return Response(json.dumps({"error": "inputs must be an object"}),
                                     status=400, content_type="application/json")
 
-            query = inputs.get("query") if settings["explicit_inputs"] else inputs.pop("query")
+            query = inputs.get("query") if explicit_inputs else inputs.pop("query")
             if not query or not isinstance(query, str):
                 return Response(json.dumps({"error": "query must be a string"}),
                                 status=400, content_type="application/json")
 
-            conversation_id = inputs.get("conversation_id") if settings["explicit_inputs"] else inputs.pop("conversation_id")
+            conversation_id = inputs.get("conversation_id") if explicit_inputs else inputs.pop("conversation_id")
             if conversation_id is not None and not isinstance(conversation_id, str):
                 return Response(json.dumps({"error": "conversation_id must be a string"}),
                                 status=400, content_type="application/json")
