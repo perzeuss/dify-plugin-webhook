@@ -1,17 +1,15 @@
-version: 0.2.0
+version: 0.2.1
 type: plugin
 author: perzeuss
 name: webhook
 label:
   en_US: Webhook
-  ja_JP: Webhook
-  zh_Hans: Webhook
+  zh_Hans: 网络钩子
   pt_BR: Webhook
 description:
   en_US: Trigger a dify app from webhook.
-  ja_JP: Trigger a dify app from webhook.
-  zh_Hans: Trigger a dify app from webhook.
-  pt_BR: Trigger a dify app from webhook.
+  zh_Hans: 通过网络钩子触发dify应用程序。
+  pt_BR: Acione um aplicativo dify a partir de um webhook.
 icon: icon.svg
 resource:
   memory: 268435456

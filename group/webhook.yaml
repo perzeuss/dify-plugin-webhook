@@ -4,39 +4,39 @@ settings:
     required: false
     label:
       en_US: API key
-      zh_Hans: API key
-      pt_BR: API key
+      zh_Hans: API 密钥
+      pt_BR: Chave de API
     placeholder:
       en_US: Please input your API key
-      zh_Hans: 请输入你的 API key
-      pt_BR: Please input your API key
+      zh_Hans: 请输入你的 API 密钥
+      pt_BR: Por favor, insira sua chave de API
   - name: api_key_location
     type: select
     required: true
     label:
       en_US: API key location
-      zh_Hans: API key location
-      pt_BR: API key location
+      zh_Hans: API 密钥位置
+      pt_BR: Localização da chave de API
     options: 
       - value: api_key_header
         label:
           en_US: X-API-Key Header
-          zh_Hans: X-API-Key Header
-          pt_BR: X-API-Key Header
+          zh_Hans: X-API-Key 头
+          pt_BR: Cabeçalho X-API-Key
       - value: token_query_param
         label:
           en_US: URL Query Param 'difyToken'
-          zh_Hans: URL Query Param 'difyToken'
-          pt_BR: URL Query Param 'difyToken'
+          zh_Hans: URL 查询参数 'difyToken'
+          pt_BR: Parâmetro de consulta URL 'difyToken'
       - value: none
         label:
           en_US: None
-          zh_Hans: None
-          pt_BR: None
+          zh_Hans: 无
+          pt_BR: Nenhum
     default: api_key_header
     placeholder:
       en_US: Please select the API key location
-      zh_Hans: 请选择 API key 位置
+      zh_Hans: 请选择 API 密钥位置
       pt_BR: Por favor, selecione a localização da chave de API
 endpoints:
   - endpoints/workflow.yaml
