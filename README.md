@@ -1,7 +1,7 @@
 ## Webhook Dify Plugin
 
 **Author:** perzeuss  
-**Version:** 0.3.0 
+**Version:** 0.4.0 
 **Type:** Extension  
 
 ---
@@ -34,7 +34,14 @@ To utilize this plugin, you must define an `api_key` unless the API key location
 5. **Specify Input Handling**:  
    You have the option to specify whether to use `req.body.inputs` or the entire `req.body` for input variables. This flexibility enhances integration with third-party systems that don't support defining the request payload.
 
-6. **Available Endpoints**:  
+6. **Specify Output Handling**:  
+   You can configure how the output data from **workflows** is returned using the `raw_data_output` flag. This option provides flexibility in determining whether to receive the response as-is or without Dify metadata:
+   - Set `raw_data_output` to `true` to receive the output of the End node without Dify metadata.
+   - Default setting is `false`, which includes Dify metadata in the response.
+
+   This configuration is particularly useful for workflows to ensure that output data aligns with the requirements of your integration.
+
+7. **Available Endpoints**:  
    You have access to two endpoint URLs:
    - **Chatflow Endpoint**
    - **Workflow Endpoint**

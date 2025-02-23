@@ -90,6 +90,31 @@ settings:
       en_US: Please enter your API key
       zh_Hans: 请输入您的 API 密钥
       pt_BR: Por favor, insira sua chave de API
+  - name: json_string_input
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Set this to true when you want to receive the req.body as a JSON string. This is recommended when using large request payloads.
+      zh_Hans: 将此设置为true, 当您希望将req.body作为JSON字符串接收时。建议在使用大型请求负载时使用此选项。
+      pt_BR: Defina isso como verdadeiro quando você quiser receber o req.body como uma string JSON. Isso é recomendado ao usar cargas úteis de requisição grandes.
+    placeholder:
+      en_US: Please enter your API key
+      zh_Hans: 请输入您的API密钥
+      pt_BR: Por favor, insira sua chave de API
+  - name: raw_data_output
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Set this to true when you want to receive the response.body.data as is, without Dify metadata. This only applies to workflows.
+      zh_Hans: 当您希望接收原始的 response.body.data（无 Dify 元数据）时，将此项设置为 true。这仅适用于工作流。
+      pt_BR: Defina isso como verdadeiro quando você quiser receber o response.body.data sem os metadados do Dify. Isso se aplica apenas a fluxos de trabalho.
+    placeholder:
+      en_US: Please enter your API key
+      zh_Hans: 请输入您的API密钥
+      pt_BR: Por favor, insira sua chave de API
+
 endpoints:
   - endpoints/workflow.yaml
   - endpoints/chatflow.yaml
