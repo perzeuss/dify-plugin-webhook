@@ -2,7 +2,8 @@ import json
 from typing import Mapping
 from werkzeug import Request, Response
 from dify_plugin import Endpoint
-from endpoints.helpers import validate_api_key
+from endpoints.helpers import apply_middleware, validate_api_key
+
 
 class ChatflowEndpoint(Endpoint):
     """
@@ -32,34 +33,42 @@ class ChatflowEndpoint(Endpoint):
     the chatflow's output with a 200 status code. In case of validation failure or 
     JSON parsing errors, it returns an error message with a 400 status code.
     """
-
-    def _invoke(self, r: Request, _values: Mapping, settings: Mapping) -> Response:
+    def _invoke(self, r: Request, values: Mapping, settings: Mapping) -> Response:
         """
         Invokes the endpoint with the given request.
         """
-        try:
-            auth_response = validate_api_key(r, settings)
-            if auth_response:
-                return auth_response
+        middleware_response = apply_middleware(r, settings)
+        if middleware_response:
+            return middleware_response
+        validation_response = validate_api_key(r, settings)
+        if validation_response:
+            return validation_response
 
+        try:
             request_data = r.get_json()
-            app_id = request_data.get("app_id")
+            app_id = values["app_id"]
 
             if not app_id:
                 return Response(json.dumps({"error": "app_id is required"}),
                                 status=400, content_type="application/json")
 
-            inputs = request_data.get("inputs", {})
-            if not isinstance(inputs, dict):
-                return Response(json.dumps({"error": "inputs must be an object"}),
-                                status=400, content_type="application/json")
+            if settings["explicit_inputs"]:
+                inputs = request_data.get("inputs", {})
+                if not isinstance(inputs, dict):
+                    return Response(json.dumps({"error": "inputs must be an object"}),
+                                    status=400, content_type="application/json")
+            else:
+                inputs = request_data
+                if not isinstance(inputs, dict):
+                    return Response(json.dumps({"error": "inputs must be an object"}),
+                                    status=400, content_type="application/json")
 
-            query = request_data.get("query")
+            query = inputs.get("query") if settings["explicit_inputs"] else inputs.pop("query")
             if not query or not isinstance(query, str):
                 return Response(json.dumps({"error": "query must be a string"}),
                                 status=400, content_type="application/json")
-            
-            conversation_id = request_data.get("conversation_id")
+
+            conversation_id = inputs.get("conversation_id") if settings["explicit_inputs"] else inputs.pop("conversation_id")
             if conversation_id is not None and not isinstance(conversation_id, str):
                 return Response(json.dumps({"error": "conversation_id must be a string"}),
                                 status=400, content_type="application/json")
@@ -75,4 +84,4 @@ class ChatflowEndpoint(Endpoint):
             return Response(json.dumps(response), status=200, content_type="application/json")
 
         except (json.JSONDecodeError, KeyError, TypeError) as e:
-            return Response(json.dumps({"error": str(e)}), status=400, content_type="application/json")
+            return Response(json.dumps({"error": str(e)}), status=500, content_type="application/json")

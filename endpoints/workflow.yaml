@@ -1,4 +1,4 @@
-path: "/workflow"
+path: "/workflow/<app_id>"
 method: "POST"
 extra:
   python:

@@ -38,6 +38,58 @@ settings:
       en_US: Please select the API key location
       zh_Hans: 请选择 API 密钥位置
       pt_BR: Por favor, selecione a localização da chave de API
+  - name: signature_verification_key
+    type: secret-input
+    required: false
+    label:
+      en_US: Signature Verification Public Key
+      zh_Hans: 签名验证公钥
+      pt_BR: Chave Pública de Verificação de Assinatura
+    placeholder:
+      en_US: Please input your public key for signature verification
+      zh_Hans: 请输入您的签名验证公钥
+      pt_BR: Por favor, insira sua chave pública para verificação de assinatura
+
+  - name: middleware
+    type: select
+    required: true
+    label:
+      en_US: Custom Middleware
+      zh_Hans: 自定义中间件
+      pt_BR: Middleware Personalizado
+    options: 
+      - value: discord
+        label:
+          en_US: Discord
+          zh_Hans: Discord
+          pt_BR: Discord
+      - value: none
+        label:
+          en_US: None
+          zh_Hans: 无
+          pt_BR: Nenhum
+    default: none
+    placeholder:
+      en_US: Custom middlewares can add logic like signature validation
+      zh_Hans: 自定义中间件可以添加诸如签名验证的逻辑
+      pt_BR: Middlewares personalizados podem adicionar lógica como validação de assinatura
+
+  - name: explicit_inputs
+    type: boolean
+    required: false
+    default: true
+    helper:
+      en_US: Set this to false when you don't have control over request.body. Your Dify app will need to configure input variables for each field that you want to read from req.body.
+      zh_Hans: 将此设置为false, 当您无法控制request.body时。您的Dify应用程序需要为您要从req.body读取的每个字段配置输入变量。
+      pt_BR: Defina isso como falso quando você não tiver controle sobre request.body. Seu aplicativo Dify precisará configurar variáveis de entrada para cada campo que você deseja ler de req.body.
+    label:
+      en_US: Use req.body.inputs instead of req.body as the inputs object
+      zh_Hans: 使用 req.body.inputs 代替 req.body 作为输入对象
+      pt_BR: Usar req.body.inputs em vez de req.body como objeto de entradas
+    placeholder:
+      en_US: Please enter your API key
+      zh_Hans: 请输入您的 API 密钥
+      pt_BR: Por favor, insira sua chave de API
 endpoints:
   - endpoints/workflow.yaml
   - endpoints/chatflow.yaml

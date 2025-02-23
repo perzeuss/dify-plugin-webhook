@@ -1,35 +1,41 @@
 ## Webhook Dify Plugin
 
 **Author:** perzeuss  
-**Version:** 0.2.1
+**Version:** 0.3.0 
 **Type:** Extension  
 
 ---
 
 ### Description
 
-This project is a Dify Plugin that allows users to trigger Dify applications using webhooks seamlessly. With this plugin, you can effortlessly initiate both chatflows and workflows through HTTP requests. 🚀
+This project is a Dify Plugin that enables seamless triggering of Dify applications using webhooks. With this plugin, you can effortlessly initiate both chatflows and workflows through HTTP requests. 🚀
 
 ### Getting Started
 
-To utilize this plugin, you must define an `api_key` upon installation unless the API key location is set to `none`. This key will authenticate your requests to the Dify webhook endpoints: Chatflow and Workflow.
+To utilize this plugin, you must define an `api_key` unless the API key location is set to `none`. This key authenticates your requests to the Dify webhook endpoints: Chatflow and Workflow.
 
 ### Installation
 
 1. **Create Endpoint**:  
-   In the Endpoints section, click the "+" icon to create a unique webhook domain. You can choose any name you want. Each endpoint can get its own configuration, such as its own credentials.
+   In the Endpoints section, click the "+" icon to create a unique webhook domain. You can choose any name you want. Each endpoint can have its own configuration, such as individualized credentials.
 
 2. **Configure API Key**:  
-   After installing the plugin, ensure you have set up an API key in your settings, unless using the `none` option for the API key location. For other configurations, this key is necessary for authenticating requests to the endpoints. Follow the input prompts in your preferred language for easy configuration.
+   After installing the plugin, ensure you have set up an API key in your settings, unless using the `none` option for the API key location. For other configurations, this key is necessary for authenticating requests. Follow the input prompts in your preferred language for easy configuration.
 
 3. **Configure API Key Location**:  
-   The API key can be passed in multiple ways to ensure compatibility with 3rd party systems that will call your webhook:
+   The API key can be utilized in various ways for compatibility with 3rd party systems:
    - `X-API-Key` header
    - URL query parameter `difyToken`
    - `none` (no API key required)
 
-4. **Available Endpoints**:  
-   You will get two endpoint URLs that you can copy and use:
+4. **Middleware Support**:  
+   The plugin now supports the use of custom middlewares. Contributors are encouraged to add more middlewares to the collection. Middlewares can be applied for request validation, implementing request mappings, etc.
+
+5. **Specify Input Handling**:  
+   You have the option to specify whether to use `req.body.inputs` or the entire `req.body` for input variables. This flexibility enhances integration with third-party systems that don't support defining the request payload.
+
+6. **Available Endpoints**:  
+   You have access to two endpoint URLs:
    - **Chatflow Endpoint**
    - **Workflow Endpoint**
 
@@ -37,9 +43,9 @@ To utilize this plugin, you must define an `api_key` upon installation unless th
 
 #### 🔊 Chatflow Endpoint
 
-Trigger a chatflow by sending a POST request to the chatflow endpoint with the required parameters:
+Trigger a chatflow by sending a POST request to the chatflow endpoint with the path parameter:
 
-- **URL**: `/chatflow`
+- **URL**: `/chatflow/<app_id>`
 - **Method**: `POST`
 - **Headers**:  
   - `Content-Type: application/json`
@@ -47,20 +53,19 @@ Trigger a chatflow by sending a POST request to the chatflow endpoint with the r
 - **Body** (JSON):
   ```json
   {
-    "app_id": "chatflow_app_id",
     "query": "Hi",
     "inputs": { "name": "John" },
     "conversation_id": ""
   }
   ```
 
-The response will include the chatflow output if the request is successful.
+A successful response will include the chatflow output.
 
 #### 🔄 Workflow Endpoint
 
-To initiate a workflow, send a POST request to the workflow endpoint:
+To initiate a workflow, send a POST request to the workflow endpoint with the path parameter:
 
-- **URL**: `/workflow`
+- **URL**: `/workflow/<app_id>`
 - **Method**: `POST`
 - **Headers**:  
   - `Content-Type: application/json`
@@ -68,21 +73,20 @@ To initiate a workflow, send a POST request to the workflow endpoint:
 - **Body** (JSON):
   ```json
   {
-    "app_id": "workflow_app_id",
     "inputs": { "name": "John" }
   }
   ```
 
-The workflow execution will return a JSON response containing the results.
+The response will contain results from the workflow execution.
 
 ### Additional Information
 
-- Ensure valid JSON for request bodies to prevent parsing errors.
-- Successful requests return a 200 status code. Unauthorized access will return a 403 status code unless API key location is set to `none`.
-- Proper error messages are provided for input validation failures with a 400 status code.
+- Use valid JSON for request bodies to avoid parsing errors.
+- Successful requests return a 200 status code. Unauthorized access returns a 403 status code unless API key location is set to `none`.
+- Proper error messages are given for input validation failures, returning a 400 status code.
 
-Harness the power of Dify by automating your chatflow and workflow triggers efficiently using this webhook plugin! 🎉
+Leverage the power of Dify by automating your chatflow and workflow triggers efficiently using this webhook plugin! 🎉
 
 ### Acknowledgments
 
-A big thank you to the Dify team for providing a fantastic developer experience and tools that made the creation of this plugin possible. This plugin was developed during a beta program, and we appreciate the support and resources that were made available throughout this period. ❤️
+Special thanks to the Dify team for delivering a fantastic developer experience and tools that facilitated the creation of this plugin. This plugin was developed during a beta program, and we appreciate the support and resources made available throughout the period. ❤️

@@ -1,8 +1,31 @@
 import json
-from typing import Mapping
+from typing import Mapping, Optional
 from werkzeug import Request, Response
+from middlewares.discord_middleware import DiscordMiddleware
 
-def validate_api_key(r: Request, settings: Mapping) -> Response:
+def apply_middleware(r: Request, settings: Mapping) -> Optional[Response]:
+    """
+    Applies middleware based on the settings provided.
+
+    :param r: The request object
+    :param settings: A dictionary containing configuration settings
+    :return: A Response object if middleware processing returns a response, otherwise None
+    """
+    try:
+        middleware_type = settings.get("middleware")
+        signature_verification_key = settings.get("signature_verification_key")
+
+        if middleware_type == "discord":
+            middleware = DiscordMiddleware(signature_verification_key)
+            response = middleware.invoke(r)
+            if response:
+                return response
+    except (json.JSONDecodeError, KeyError, TypeError) as e:
+        return Response(json.dumps({"error": f"Middleware error: {str(e)}"}), status=500, content_type="application/json")
+
+    return None
+
+def validate_api_key(r: Request, settings: Mapping) -> Optional[Response]:
     """
     Validates the API key based on the location specified in the settings.
 

@@ -1,4 +1,4 @@
-path: "/chatflow"
+path: "/chatflow/<app_id>"
 method: "POST"
 extra:
   python:

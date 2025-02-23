@@ -2,7 +2,7 @@ import json
 from typing import Mapping
 from werkzeug import Request, Response
 from dify_plugin import Endpoint
-from endpoints.helpers import validate_api_key
+from endpoints.helpers import apply_middleware, validate_api_key
 
 class WorkflowEndpoint(Endpoint):
     """
@@ -29,27 +29,35 @@ class WorkflowEndpoint(Endpoint):
     JSON parsing errors, it returns an error message with a 400 status code.
     """
 
-    def _invoke(self, r: Request, _values: Mapping, settings: Mapping) -> Response:
+    def _invoke(self, r: Request, values: Mapping, settings: Mapping) -> Response:
         """
         Invokes the endpoint with the given request.
         """
-        try:
-            auth_response = validate_api_key(r, settings)
-            if auth_response:
-                return auth_response
+        middleware_response = apply_middleware(r, settings)
+        if middleware_response:
+            return middleware_response
+        validation_response = validate_api_key(r, settings)
+        if validation_response:
+            return validation_response
 
+        try:
             request_data = r.get_json()
-            app_id = request_data.get("app_id")
+            app_id = values["app_id"]
 
             if not app_id:
                 return Response(json.dumps({"error": "app_id is required"}),
                                 status=400, content_type="application/json")
 
-            inputs = request_data.get("inputs", {})
-
-            if not isinstance(inputs, dict):
-                return Response(json.dumps({"error": "inputs must be an object"}),
-                                status=400, content_type="application/json")
+            if settings["explicit_inputs"]:
+                inputs = request_data.get("inputs", {})
+                if not isinstance(inputs, dict):
+                    return Response(json.dumps({"error": "inputs must be an object"}),
+                                    status=400, content_type="application/json")
+            else:
+                inputs = request_data
+                if not isinstance(inputs, dict):
+                    return Response(json.dumps({"error": "inputs must be an object"}),
+                                    status=400, content_type="application/json")
 
             response = self.session.app.workflow.invoke(
                 app_id=app_id, inputs=inputs, response_mode="blocking"
@@ -58,4 +66,4 @@ class WorkflowEndpoint(Endpoint):
             return Response(json.dumps(response), status=200, content_type="application/json")
 
         except (json.JSONDecodeError, KeyError, TypeError) as e:
-            return Response(json.dumps({"error": str(e)}), status=400, content_type="application/json")
+            return Response(json.dumps({"error": str(e)}), status=500, content_type="application/json")
