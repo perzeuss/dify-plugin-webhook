@@ -2,6 +2,7 @@ import json
 from typing import Mapping, Optional
 from werkzeug import Request, Response
 from middlewares.discord_middleware import DiscordMiddleware
+from middlewares.default_middleware import DefaultMiddleware
 
 def apply_middleware(r: Request, settings: Mapping) -> Optional[Response]:
     """
@@ -21,7 +22,15 @@ def apply_middleware(r: Request, settings: Mapping) -> Optional[Response]:
             if response:
                 return response
     except (json.JSONDecodeError, KeyError, TypeError) as e:
+        print(f"Middleware Error: {str(e)}")
         return Response(json.dumps({"error": f"Middleware error: {str(e)}"}), status=500, content_type="application/json")
+
+    try:
+        default_middleware = DefaultMiddleware()
+        default_middleware.invoke(r, settings)
+    except (json.JSONDecodeError, KeyError, TypeError) as e:
+        print(f"Default Middleware Error: {str(e)}")
+        return Response(json.dumps({"error": f"Default Middleware error: {str(e)}"}), status=500, content_type="application/json")
 
     return None
 
