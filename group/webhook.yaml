@@ -1,7 +1,7 @@
 settings:
   - name: api_key
     type: secret-input
-    required: true
+    required: false
     label:
       en_US: API key
       zh_Hans: API key
@@ -28,6 +28,11 @@ settings:
           en_US: URL Query Param 'difyToken'
           zh_Hans: URL Query Param 'difyToken'
           pt_BR: URL Query Param 'difyToken'
+      - value: none
+        label:
+          en_US: None
+          zh_Hans: None
+          pt_BR: None
     default: api_key_header
     placeholder:
       en_US: Please select the API key location

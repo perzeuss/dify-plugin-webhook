@@ -13,6 +13,10 @@ def validate_api_key(r: Request, settings: Mapping) -> Response:
     api_key_location = settings.get("api_key_location", "api_key_header")
     expected_api_key = settings.get("api_key")
 
+    if api_key_location != 'none' and not expected_api_key:
+        return Response(json.dumps({"error": "Expected API key is not configured."}),
+                        status=500, content_type="application/json")
+
     if api_key_location == "api_key_header":
         request_api_key = r.headers.get("x-api-key")
         if request_api_key != expected_api_key:
