@@ -51,7 +51,7 @@ class WorkflowEndpoint(Endpoint):
             return validation_response
 
         try:
-            request_data = r.default_middleware_json or r.get_json()
+            request_data = getattr(r, 'default_middleware_json', None) or r.get_json()
             app_id = values["app_id"]
             logger.debug("Parsed request data: %s", request_data)
             logger.debug("Extracted app_id: %s", app_id)
