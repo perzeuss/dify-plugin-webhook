@@ -1,10 +1,15 @@
-## Webhook Dify Plugin
+## Dify Plugin: Webhook 
 
-**Author:** perzeuss  
-**Version:** 0.4.2  
-**Type:** Extension  
-
----
+<div align="center">
+  <img src="https://img.shields.io/badge/Plugin%20Type-Extensionl-blue" alt="Plugin Type: Extension">
+  <img src="https://img.shields.io/github/v/release/perzeuss/dify-plugin-webhook?label=Version&color=DD7200" alt="Latest Release Version">
+  <br>
+  <img src="https://img.shields.io/badge/Compatible%20With-Dify%201.0-purple" alt="Compatible With: Dify 1.0.*">
+  <a href="https://codecov.io/gh/perzeuss/dify-plugin-webhook">
+    <img src="https://codecov.io/gh/perzeuss/dify-plugin-webhook/main/graph/badge.svg" alt="Coverage Status">
+  </a>
+  <img src="https://img.shields.io/github/license/perzeuss/dify-plugin-webhook?label=License&color=darkgreen" alt="License">
+</div>
 
 ### 🔍 Description
 
