@@ -1,0 +1,5 @@
+path: "/single-workflow"
+method: "POST"
+extra:
+  python:
+    source: "endpoints/invoke_endpoint.py"

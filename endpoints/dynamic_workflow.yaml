@@ -2,4 +2,4 @@ path: "/workflow/<app_id>"
 method: "POST"
 extra:
   python:
-    source: "endpoints/workflow.py"
+    source: "endpoints/invoke_endpoint.py"

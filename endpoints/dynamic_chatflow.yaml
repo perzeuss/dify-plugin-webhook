@@ -2,4 +2,4 @@ path: "/chatflow/<app_id>"
 method: "POST"
 extra:
   python:
-    source: "endpoints/chatflow.py"
+    source: "endpoints/invoke_endpoint.py"

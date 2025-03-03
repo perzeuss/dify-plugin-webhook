@@ -1,0 +1,5 @@
+path: "/single-chatflow"
+method: "POST"
+extra:
+  python:
+    source: "endpoints/invoke_endpoint.py"
