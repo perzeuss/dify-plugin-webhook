@@ -71,9 +71,10 @@ Visit the Dify Plugin marketplace, search for the "Webhook" plugin and click the
 
 Trigger a chatflow by sending a POST request to the chatflow endpoint:
 
-- **URL**: `/chatflow/<app_id>`
+- **URL Without App**: `/chatflow/<app_id>`
+- **URL With App**: `/single-chatflow`
 - **Method**: `POST`
-- **Headers**:  
+- **Headers**:
   - `Content-Type: application/json`
   - If using an API key: `X-API-Key: <your_api_key>`
 - **Body** (JSON):
@@ -85,15 +86,16 @@ Trigger a chatflow by sending a POST request to the chatflow endpoint:
   }
   ```
 
-A successful response will include the chatflow output.
+For endpoints configured with a specific Dify app, use the `/single-chatflow` route. A successful response will include the chatflow output.
 
 #### 🔄 Workflow Endpoint
 
 To initiate a workflow, send a POST request to the workflow endpoint:
 
-- **URL**: `/workflow/<app_id>`
+- **URL Without App**: `/workflow/<app_id>`
+- **URL With App**: `/single-workflow`
 - **Method**: `POST`
-- **Headers**:  
+- **Headers**:
   - `Content-Type: application/json`
   - If using an API key: `X-API-Key: <your_api_key>`
 - **Body** (JSON):
@@ -103,7 +105,7 @@ To initiate a workflow, send a POST request to the workflow endpoint:
   }
   ```
 
-The response will contain results from the workflow execution.
+For endpoints configured with a specific Dify app, use the `/single-workflow` route. The response will contain results from the workflow execution.
 
 ### 🧩 Customization with Middlewares
 

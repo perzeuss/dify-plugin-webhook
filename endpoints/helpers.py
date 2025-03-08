@@ -1,5 +1,5 @@
 import json
-from typing import Mapping, Optional
+from typing import Literal, Mapping, Optional
 from werkzeug import Request, Response
 from middlewares.discord_middleware import DiscordMiddleware
 from middlewares.default_middleware import DefaultMiddleware
@@ -61,4 +61,26 @@ def validate_api_key(r: Request, settings: Mapping) -> Optional[Response]:
             return Response(json.dumps({"error": "Invalid API key"}),
                             status=403, content_type="application/json")
 
+    return None
+
+EndpointRoute = Literal["/workflow/<app_id>", "/chatflow/<app_id>", "/single-workflow", "/single-chatflow"]
+
+def determine_route(path: str) -> Optional[EndpointRoute]:
+    """
+    Determines the endpoint route based on the request path.
+
+    Args:
+        path: The request path
+
+    Returns:
+        The endpoint route as a string, or None if the path doesn't match
+    """
+    if path.startswith("/workflow"):
+        return "/workflow/<app_id>"
+    elif path.startswith("/chatflow"):
+        return "/chatflow/<app_id>"
+    elif path.startswith("/single-workflow"):
+        return "/single-workflow"
+    elif path.startswith("/single-chatflow"):
+        return "/single-chatflow"
     return None

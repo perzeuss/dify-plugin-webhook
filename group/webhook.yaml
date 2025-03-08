@@ -1,4 +1,16 @@
 settings:
+  - name: static_app_id
+    type: app-selector
+    required: false
+    label:
+      en_US: App (Disables the <app_id> routes)
+      zh_Hans: 应用程序 (禁用<app_id>路由)
+      pt_BR: Aplicativo (Desativa as rotas de <app_id>)
+    placeholder:
+      en_US: Select a specific app to expose, instead of exposing all workspace apps
+      zh_Hans: 选择要公开的特定应用，而不是公开所有工作区应用
+      pt_BR: Selecione um aplicativo específico para expor, em vez de expor todos os aplicativos do espaço de trabalho
+
   - name: api_key
     type: secret-input
     required: false
@@ -38,17 +50,6 @@ settings:
       en_US: Please select the API key location
       zh_Hans: 请选择 API 密钥位置
       pt_BR: Por favor, selecione a localização da chave de API
-  - name: signature_verification_key
-    type: secret-input
-    required: false
-    label:
-      en_US: Signature Verification Public Key
-      zh_Hans: 签名验证公钥
-      pt_BR: Chave Pública de Verificação de Assinatura
-    placeholder:
-      en_US: Please input your public key for signature verification
-      zh_Hans: 请输入您的签名验证公钥
-      pt_BR: Por favor, insira sua chave pública para verificação de assinatura
 
   - name: middleware
     type: select
@@ -72,7 +73,18 @@ settings:
     placeholder:
       en_US: Custom middlewares can add logic like signature validation
       zh_Hans: 自定义中间件可以添加诸如签名验证的逻辑
-      pt_BR: Middlewares personalizados podem adicionar lógica como validação de assinatura
+      pt_BR: Middlewares personalizados podem adicionar lógica como validação de assinatura      
+  - name: signature_verification_key
+    type: secret-input
+    required: false
+    label:
+      en_US: Signature Verification Public Key
+      zh_Hans: 签名验证公钥
+      pt_BR: Chave Pública de Verificação de Assinatura
+    placeholder:
+      en_US: Please input your public key for signature verification
+      zh_Hans: 请输入您的签名验证公钥
+      pt_BR: Por favor, insira sua chave pública para verificação de assinatura
 
   - name: explicit_inputs
     type: boolean
@@ -86,35 +98,28 @@ settings:
       en_US: Use req.body.inputs instead of req.body as the inputs object
       zh_Hans: 使用 req.body.inputs 代替 req.body 作为输入对象
       pt_BR: Usar req.body.inputs em vez de req.body como objeto de entradas
-    placeholder:
-      en_US: Please enter your API key
-      zh_Hans: 请输入您的 API 密钥
-      pt_BR: Por favor, insira sua chave de API
+
+
   - name: json_string_input
     type: boolean
     required: false
     default: false
     label:
-      en_US: Set this to true when you want to receive the req.body as a JSON string. This is recommended when using large request payloads.
-      zh_Hans: 将此设置为true, 当您希望将req.body作为JSON字符串接收时。建议在使用大型请求负载时使用此选项。
-      pt_BR: Defina isso como verdadeiro quando você quiser receber o req.body como uma string JSON. Isso é recomendado ao usar cargas úteis de requisição grandes.
-    placeholder:
-      en_US: Please enter your API key
-      zh_Hans: 请输入您的API密钥
-      pt_BR: Por favor, insira sua chave de API
+      en_US: Transform req.body to req.body.json_string as JSON string.
+      zh_Hans: 将req.body转换为req.body.json_string作为JSON字符串。
+      pt_BR: Transforme req.body em req.body.json_string como string JSON.
+
   - name: raw_data_output
     type: boolean
     required: false
     default: false
     label:
-      en_US: Set this to true when you want to receive the response.body.data as is, without Dify metadata. This only applies to workflows.
-      zh_Hans: 当您希望接收原始的 response.body.data（无 Dify 元数据）时，将此项设置为 true。这仅适用于工作流。
-      pt_BR: Defina isso como verdadeiro quando você quiser receber o response.body.data sem os metadados do Dify. Isso se aplica apenas a fluxos de trabalho.
-    placeholder:
-      en_US: Please enter your API key
-      zh_Hans: 请输入您的API密钥
-      pt_BR: Por favor, insira sua chave de API
+      en_US: Send res.body.data instead of res.body.data as workflow response.
+      zh_Hans: 当您希望接收 res.body.data 作为工作流响应时，将此项设置为 true。
+      pt_BR: Envie res.body.data como resposta de fluxo de trabalho em vez de res.body.data.
 
 endpoints:
-  - endpoints/workflow.yaml
-  - endpoints/chatflow.yaml
+  - endpoints/dynamic_workflow.yaml
+  - endpoints/dynamic_chatflow.yaml
+  - endpoints/static_chatflow.yaml
+  - endpoints/static_workflow.yaml
