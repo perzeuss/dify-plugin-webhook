@@ -114,10 +114,9 @@ settings:
     required: false
     default: false
     label:
-      en_US: Send res.body.data instead of res.body.data as workflow response.
-      zh_Hans: 当您希望接收 res.body.data 作为工作流响应时，将此项设置为 true。
-      pt_BR: Envie res.body.data como resposta de fluxo de trabalho em vez de res.body.data.
-
+      en_US: Send res.body.data instead of res.body as workflow response.
+      zh_Hans: 发送 res.body.data 作为工作流响应，而不是 res.body。
+      pt_BR: Envie res.body.data como resposta do fluxo de trabalho em vez de res.body.
 endpoints:
   - endpoints/dynamic_workflow.yaml
   - endpoints/dynamic_chatflow.yaml
