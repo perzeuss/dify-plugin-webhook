@@ -1,4 +1,4 @@
-version: 0.5.0
+version: 0.5.1
 type: plugin
 author: perzeuss
 name: webhook
@@ -22,7 +22,7 @@ plugins:
   endpoints:
     - group/webhook.yaml
 meta:
-  version: 0.5.0
+  version: 0.5.1
   arch:
     - amd64
     - arm64
