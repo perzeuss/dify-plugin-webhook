@@ -1,0 +1,98 @@
+# This workflow builds the difypkg and uploads it to the current pre-release.
+
+name: Release Dify Package
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write 
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.6
+        with:
+          fetch-depth: 0
+
+      - name: Get the latest tag
+        id: get_tag
+        run: |
+          echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+
+      - name: Check for pre-release
+        id: check_prerelease
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag=${{ steps.get_tag.outputs.tag }}
+          owner=${{ github.repository_owner }}
+          repo_name=$(basename `git rev-parse --show-toplevel`)
+          release=$(curl -X GET -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            https://api.github.com/repos/$owner/$repo_name/releases/tags/$tag)
+
+          if [[ $(echo "$release" | jq -r '.prerelease') != "true" ]]; then
+            echo "Pre-release not found for tag $tag. Exiting."
+            exit 1
+          fi
+
+          # Store the release URL for uploading assets later
+          echo "release_url=$(echo "$release" | jq -r '.upload_url')" >> $GITHUB_OUTPUT
+
+      - name: Check for existing difypkg file
+        run: |
+          tag=${{ steps.get_tag.outputs.tag }}
+          repo_name=$(basename `git rev-parse --show-toplevel`)
+          if [ -f "$repo_name-$tag.difypkg" ]; then
+            echo "File $repo_name-$tag.difypkg already exists. Exiting."
+            exit 0
+          fi
+
+      - name: Get latest release
+        id: latest_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          response=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            https://api.github.com/repos/langgenius/dify-plugin-daemon/releases/latest)
+
+          # Extract browser_download_url which is directly downloadable
+          download_url=$(echo $response | jq -r '.assets[] | select(.name == "dify-plugin-linux-amd64") | .browser_download_url')
+          echo "download_url=$download_url" >> $GITHUB_OUTPUT
+
+          # Optional: Extract the version for reference
+          echo "version=$(echo $response | jq -r '.tag_name')" >> $GITHUB_OUTPUT
+
+      - name: Download Dify Plugin
+        run: |
+          if [ -z "${{ steps.latest_release.outputs.download_url }}" ]; then
+            echo "Asset not found in the latest release. Exiting."
+            exit 1
+          fi
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o dify "${{ steps.latest_release.outputs.download_url }}"
+          chmod +x dify
+
+      - name: Run Dify Plugin Package
+        run: |
+          PLUGIN_DIR=$(pwd)
+          ./dify plugin package $PLUGIN_DIR
+
+      - name: Set package filename
+        id: set_package_file
+        run: |
+          repo_name=$(basename `git rev-parse --show-toplevel`)
+          tag=${{ steps.get_tag.outputs.tag }}
+          echo "package_file=$repo_name.difypkg" >> $GITHUB_OUTPUT
+
+      - name: Upload package to GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.check_prerelease.outputs.release_url }}
+          asset_path: ./${{ steps.set_package_file.outputs.package_file }}
+          asset_name: ${{ steps.set_package_file.outputs.package_file }}
+          asset_content_type: application/octet-stream
