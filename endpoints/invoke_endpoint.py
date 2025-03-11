@@ -149,13 +149,13 @@ class WebhookEndpoint(Endpoint):
                 response = self._invoke_workflow(
                     static_app_id, inputs, settings.get('raw_data_output', False))
 
-            if not response:
-                return Response(json.dumps({"error": "Failed to get response"}), status=500, content_type="application/json")
             else:
                 # Return response
                 logger.debug("%s response: %s", route, response)
                 return Response(json.dumps(response), status=200, content_type="application/json")
 
+            if not response:
+                return Response(json.dumps({"error": "Failed to get response"}), status=500, content_type="application/json")
         except (json.JSONDecodeError, KeyError, TypeError) as e:
             logger.error("Error during request processing: %s", str(e))
             return Response(json.dumps({"error": str(e)}), status=500, content_type="application/json")
