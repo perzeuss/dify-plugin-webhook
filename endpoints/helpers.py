@@ -4,6 +4,7 @@ from werkzeug import Request, Response
 from middlewares.discord_middleware import DiscordMiddleware
 from middlewares.default_middleware import DefaultMiddleware
 
+
 def apply_middleware(r: Request, settings: Mapping) -> Optional[Response]:
     """
     Applies middleware based on the settings provided.
@@ -34,6 +35,7 @@ def apply_middleware(r: Request, settings: Mapping) -> Optional[Response]:
 
     return None
 
+
 def validate_api_key(r: Request, settings: Mapping) -> Optional[Response]:
     """
     Validates the API key based on the location specified in the settings.
@@ -54,7 +56,7 @@ def validate_api_key(r: Request, settings: Mapping) -> Optional[Response]:
         if request_api_key != expected_api_key:
             return Response(json.dumps({"error": "Invalid API key"}),
                             status=403, content_type="application/json")
-    
+
     elif api_key_location == "token_query_param":
         request_api_key = r.args.get("difyToken")
         if request_api_key != expected_api_key:
@@ -63,7 +65,13 @@ def validate_api_key(r: Request, settings: Mapping) -> Optional[Response]:
 
     return None
 
-EndpointRoute = Literal["/workflow/<app_id>", "/chatflow/<app_id>", "/single-workflow", "/single-chatflow"]
+
+EndpointRoute = Literal[
+    "/workflow/<app_id>",
+    "/chatflow/<app_id>",
+    "/single-workflow",
+    "/single-chatflow"
+]
 
 def determine_route(path: str) -> Optional[EndpointRoute]:
     """
