@@ -15,6 +15,9 @@
 
 This project is a Dify Plugin that enables seamless triggering of Dify applications using webhooks. With this plugin, you can effortlessly initiate both chatflows and workflows through HTTP requests from any third-party system. 🚀
 
+### ⭐ GitHub Repository
+Star and watch our GitHub repository at https://github.com/perzeuss/dify-plugin-webhook to be notified about new releases! The project is open source, feel free to fork and modify it!
+
 ### ✨ Key Features & Benefits
 
 | Feature | Webhook Plugin | Standard Dify API | Benefit |
@@ -54,16 +57,16 @@ Visit the Dify Plugin marketplace, search for the "Webhook" plugin and click the
    Enable this option to automatically convert the entire request body to a JSON string. This is particularly useful when you want to pass a complex payload through a single input variable in Dify and parse it within your application logic.
 
 7. **Specify Output Handling**:  
-   Configure how the output data from **workflows** is returned using the `raw_data_output` flag:
-   - Set `raw_data_output` to `true` to receive only the output of the End node without Dify metadata.
-   - Default setting is `false`, which includes Dify metadata in the response.
-
-   This configuration ensures output data aligns perfectly with the requirements of your integration.
+   Configure the output data from **workflows**. The webhook can send res.body.data (Output of the End node) as the response body without Dify metadata. By default the response contains metada which could conflict with the requirements of your integration.
 
 8. **Available Endpoints**:  
-   You have access to two endpoint URLs:
-   - **Chatflow Endpoint**: `/chatflow/<app_id>`
-   - **Workflow Endpoint**: `/workflow/<app_id>`
+   You have access to the following endpoint URLs:
+   - Dynamic endpoints, exposes all apps in the workspace
+     - **Chatflow Endpoint**: `/chatflow/<app_id>`
+     - **Workflow Endpoint**: `/workflow/<app_id>`
+   - Single app endpoints, exposes only the selected app
+     - **Chatflow Endpoint**: `/single-chatflow`
+     - **Workflow Endpoint**: `/single-workflow`
 
 ### 📘 Usage Guide
 
@@ -128,16 +131,16 @@ The plugin supports middleware for extended functionality:
 
 #### Multiple Endpoints Configuration
 
-You can create multiple endpoints with different configurations:
+You can create multiple endpoints with different configurations. For example:
 
-- **Discord Bot Endpoint**: With Discord middleware and no API key
-- **Zapier Integration**: With API key in URL parameter and raw data output
-- **Internal Systems**: With API key in header and full response data
+- **Discord Bot Endpoint**: With Discord middleware and public key for signature verification
+- **Zapier Integration**: With request payload in json_string variable and res.body.data as output
+- **Internal Systems**: With full response data including metadata for token usage tracking
 
 #### Custom Response Formatting
 
 For workflows that need to integrate with systems expecting specific response formats:
-1. Configure the endpoint with `raw_data_output: true`
+1. Enable the toggle for: `Send res.body.data instead of res.body as workflow response.`
 2. In your Dify workflow, ensure the End node provides exactly the format expected
 
 ### 🔍 Troubleshooting
