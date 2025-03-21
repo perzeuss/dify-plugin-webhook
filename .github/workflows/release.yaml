@@ -72,13 +72,13 @@ jobs:
             echo "Asset not found in the latest release. Exiting."
             exit 1
           fi
-          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o dify "${{ steps.latest_release.outputs.download_url }}"
-          chmod +x dify
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o ../dify "${{ steps.latest_release.outputs.download_url }}"
+          chmod +x ../dify
 
       - name: Run Dify Plugin Package
         run: |
           PLUGIN_DIR=$(pwd)
-          ./dify plugin package $PLUGIN_DIR
+          ../dify plugin package $PLUGIN_DIR
 
       - name: Set package filename
         id: set_package_file
