@@ -5,7 +5,7 @@ certifi==2025.1.31
 cffi==1.17.1
 charset-normalizer==3.4.1
 click==8.1.8
-dify_plugin==0.0.1b72
+dify_plugin>=0.1.0,<0.2.0
 dpkt==1.9.8
 Flask==3.0.3
 gevent==24.11.1

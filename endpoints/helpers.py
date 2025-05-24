@@ -1,8 +1,11 @@
 import json
+import logging # Added for logging
 from typing import Literal, Mapping, Optional
 from werkzeug import Request, Response
 from middlewares.discord_middleware import DiscordMiddleware
-from middlewares.default_middleware import DefaultMiddleware
+from middlewares.default_middleware import DefaultMiddleware 
+
+logger = logging.getLogger(__name__) # Added logger
 
 def apply_middleware(r: Request, settings: Mapping) -> Optional[Response]:
     """
@@ -21,15 +24,57 @@ def apply_middleware(r: Request, settings: Mapping) -> Optional[Response]:
             response = middleware.invoke(r)
             if response:
                 return response
-    except (json.JSONDecodeError, KeyError, TypeError) as e:
-        print(f"Middleware Error: {str(e)}")
+        elif middleware_type == "folo": # New Folo middleware logic
+            logger.debug("Applying Folo middleware")
+            try:
+                folo_payload = r.get_json()
+                if not folo_payload or "entry" not in folo_payload:
+                    logger.error("Folo middleware: Invalid or missing 'entry' in payload")
+                    return Response(json.dumps({"error": "Folo middleware: Invalid payload, 'entry' field is missing."}),
+                                    status=400, content_type="application/json")
+
+                entry = folo_payload.get("entry", {})
+                
+                title = entry.get("title")
+                content = entry.get("content")
+                author = entry.get("author")
+                url = entry.get("url")
+                published_at = entry.get("publishedAt")
+
+                dify_payload = {
+                    "query": "start",
+                    "inputs": {
+                        "title": title,
+                        "content": content,
+                        "author": author,
+                        "url": url,
+                        "publishedAt": published_at
+                    }
+                }
+                
+                r.default_middleware_json = dify_payload 
+                logger.info("Folo middleware: Payload transformed successfully")
+
+            except json.JSONDecodeError as e:
+                logger.error(f"Folo middleware: JSONDecodeError - {str(e)}")
+                return Response(json.dumps({"error": f"Folo middleware: Invalid JSON payload - {str(e)}"}),
+                                status=400, content_type="application/json")
+            except Exception as e: 
+                logger.error(f"Folo middleware: Unexpected error - {str(e)}")
+                return Response(json.dumps({"error": f"Folo middleware: Unexpected error - {str(e)}"}),
+                                status=500, content_type="application/json")
+
+    except (json.JSONDecodeError, KeyError, TypeError) as e: 
+        logger.error(f"Middleware Error: {str(e)}")
         return Response(json.dumps({"error": f"Middleware error: {str(e)}"}), status=500, content_type="application/json")
 
     try:
-        default_middleware = DefaultMiddleware()
-        default_middleware.invoke(r, settings)
+        if middleware_type not in ["discord", "folo"] or not hasattr(r, 'default_middleware_json'):
+            logger.debug("Applying Default middleware")
+            default_middleware = DefaultMiddleware()
+            default_middleware.invoke(r, settings) 
     except (json.JSONDecodeError, KeyError, TypeError) as e:
-        print(f"Default Middleware Error: {str(e)}")
+        logger.error(f"Default Middleware Error: {str(e)}")
         return Response(json.dumps({"error": f"Default Middleware error: {str(e)}"}), status=500, content_type="application/json")
 
     return None
