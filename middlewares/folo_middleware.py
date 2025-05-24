@@ -45,6 +45,7 @@ class FoloMiddleware:
             author = entry.get("author")
             url = entry.get("url")
             published_at = entry.get("publishedAt")
+            description = entry.get("description")
 
             # Construct the new payload for Dify
             dify_inputs = {
@@ -52,7 +53,8 @@ class FoloMiddleware:
                 "content": content,
                 "author": author,
                 "url": url,
-                "publishedAt": published_at
+                "publishedAt": published_at,
+                "description": description
             }
             
             # Add debug logging for extracted inputs
