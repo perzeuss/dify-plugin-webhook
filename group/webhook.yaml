@@ -64,6 +64,11 @@ settings:
           en_US: Discord
           zh_Hans: Discord
           pt_BR: Discord
+      - value: folo
+        label:
+          en_US: Folo
+          zh_Hans: Folo
+          pt_BR: Folo
       - value: none
         label:
           en_US: None
